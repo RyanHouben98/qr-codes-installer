@@ -1,7 +1,10 @@
 #!/bin/sh
 #
-# qr-codes installer. Clones the private qr-codes repo and hands off to
-# provision.sh. Meant to be run on a fresh droplet as root:
+# qr-codes installer. Clones the private qr-codes repo -- nothing more.
+# What you run after that (provision.sh for a hardened non-root deploy
+# user, or straight into setup.sh as whoever you are now) is your call;
+# this script doesn't decide that for you. Meant to be run on a fresh
+# droplet as root:
 #
 #   curl -fsSL <hosted-url> | sh
 #
@@ -56,11 +59,11 @@ cd "$DEST"
 git sparse-checkout init --cone
 git checkout main
 
-if [ "$(id -u)" -eq 0 ]; then
-  echo
-  echo "Cloned to $DEST. Continuing with provision.sh..."
-  exec ./provision.sh
-else
-  echo
-  echo "Cloned to $DEST. Continue per the README from here (create .env files, run setup.sh)."
-fi
+echo
+echo "Cloned to $DEST."
+echo
+echo "Next, from $DEST:"
+echo "  - For a hardened non-root 'deploy' user (recommended for anything that'll"
+echo "    carry real traffic): ./provision.sh, then follow its own next-steps output."
+echo "  - To skip that and continue as $(whoami) for now: create apps/api/.env"
+echo "    (see the README's 'Secrets on the server' section), then ./setup.sh."
