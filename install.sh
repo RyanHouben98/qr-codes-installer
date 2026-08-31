@@ -43,10 +43,18 @@ else
   sudo chown "$(id -u):$(id -g)" "$DEST"
 fi
 
-git clone "https://${GH_USER}:${GH_TOKEN}@github.com/${REPO}.git" "$DEST"
+# The droplet only ever runs pre-built images pulled from ghcr.io -- it never
+# needs the app source (apps/api, apps/web) that also lives in this repo.
+# A partial clone + cone-mode sparse-checkout fetches and checks out just the
+# top-level deploy files (docker-compose.yml, Caddyfile, setup.sh, etc.),
+# leaving apps/ and .github/ untouched. `git pull` later (via update.sh)
+# still works completely normally against this.
+git clone --filter=blob:none --no-checkout "https://${GH_USER}:${GH_TOKEN}@github.com/${REPO}.git" "$DEST"
 unset GH_TOKEN
 
 cd "$DEST"
+git sparse-checkout init --cone
+git checkout main
 
 if [ "$(id -u)" -eq 0 ]; then
   echo

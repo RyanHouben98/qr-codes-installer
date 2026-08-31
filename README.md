@@ -17,7 +17,7 @@ You'll be prompted for a GitHub username and Personal Access Token to clone the 
 ## What it does
 
 1. Prompts for a GitHub username + PAT, reading from `/dev/tty` directly — stdin is consumed by the `curl | sh` pipe itself, so a normal prompt wouldn't work.
-2. Clones `RyanHouben98/qr-codes` into `/var/www/qr-codes`.
+2. Clones `RyanHouben98/qr-codes` into `/var/www/qr-codes` — as a partial, sparse checkout: only the top-level deployment files (`docker-compose.yml`, `Caddyfile`, `setup.sh`, etc.) are fetched and checked out, not the app source (`apps/api`, `apps/web`) that also lives in that repo. The droplet only ever runs pre-built images from `ghcr.io`, so it has no use for that source — this just keeps it off disk. `git pull` (via `qr-codes`'s own `update.sh`) works completely normally against a sparse checkout like this.
 3. If run as root, hands off to the freshly-cloned repo's own `provision.sh`, which updates packages and creates a non-root `deploy` user. Everything after that is documented in `qr-codes`'s own README.
 
 ## Why a separate repo instead of living inside qr-codes itself
