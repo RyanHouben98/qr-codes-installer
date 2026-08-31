@@ -65,5 +65,5 @@ echo
 echo "Next, from $DEST:"
 echo "  - For a hardened non-root 'deploy' user (recommended for anything that'll"
 echo "    carry real traffic): ./provision.sh, then follow its own next-steps output."
-echo "  - To skip that and continue as $(whoami) for now: create apps/api/.env"
-echo "    (see the README's 'Secrets on the server' section), then ./setup.sh."
+echo "  - To skip that and continue as $(whoami) for now: just run ./setup.sh --"
+echo "    it prompts for the Supabase connection string itself if needed."
